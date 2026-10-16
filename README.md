@@ -160,7 +160,7 @@ The trained artifacts land in `api/`:
 - `model_meta.json` — minor↔major lookup table, class vocabularies, and the
   list of raw input columns the API expects.
 
-`model.joblib` is already committed to the repo, so step 4 is only needed
+`model.joblib` is already committed to the repo, so step 3 is only needed
 if you want to retrain against a modified cleaned dataset.
 
 ---
