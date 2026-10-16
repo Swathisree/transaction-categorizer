@@ -17,8 +17,9 @@ Thumbs.db
 .idea/
 
 # Private transaction data — do not commit
-src/transaction-dataset.csv
-src/transaction-dataset-cleaned.csv
+data/transaction-dataset.csv
+data/transaction-dataset-cleaned.csv
+data/*.csv
 transaction-dataset.csv
 transaction-dataset-cleaned.csv
 

@@ -7,12 +7,15 @@ server hosting the winning model.
 
 ```
 .
-├── src/     Python scripts + data (clean, baseline, tournament)
+├── data/    Transaction CSVs — raw + cleaned (gitignored, data is private)
+├── src/     Python scripts (clean, baseline, tournament)
 ├── docs/    HTML reports, EDA, model-round write-ups, the test brief
 └── api/     FastAPI prediction service for the trained model
 ```
 
-Each sub-folder has its own README with internal details.
+Each sub-folder has its own README with internal details. Every training
+script accepts `--input` / `--output` on the command line; the defaults
+point at `data/` so no arguments are needed for the standard run.
 
 ---
 
@@ -125,26 +128,29 @@ Everything runs from Python 3.11+. Install the training dependencies:
 pip install pandas scikit-learn xgboost
 ```
 
+Place your copy of the raw CSV at `data/transaction-dataset.csv` (the
+file is gitignored, so each contributor supplies their own).
+
 **Full pipeline — from the raw CSV to the production model artifact:**
 
 ```bash
-cd src
-
-# 1. clean the raw dataset  →  transaction-dataset-cleaned.csv
-python clean.py
+# 1. clean the raw dataset  →  data/transaction-dataset-cleaned.csv
+python src/clean.py
 
 # 2. (optional) see where the baseline floor sits
-python baseline_random_classifier.py
+python src/baseline_random_classifier.py
 
 # 3. (optional) replay the full 6-round tournament
-python model_tournament.py
+python src/model_tournament.py
 
-# 4. train the champion RF on the full cleaned dataset and emit the artifacts
-#    the API loads (model.joblib + model_meta.json)
-cp transaction-dataset-cleaned.csv ..        # train_model.py reads from ../
-cd ../api
-python train_model.py
+# 4. train the champion RF on the full cleaned dataset and emit the
+#    artifacts the API loads (api/model.joblib + api/model_meta.json)
+python api/train_model.py
 ```
+
+Every script accepts `--input /path/to/clean.csv` (and `clean.py` also
+accepts `--output`) to point at a different CSV; the defaults resolve to
+`data/` from the script's own location, so run them from anywhere.
 
 The trained artifacts land in `api/`:
 
