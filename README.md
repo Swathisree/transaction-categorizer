@@ -137,7 +137,7 @@ file is gitignored, so each contributor supplies their own).
 # 1. clean the raw dataset  →  data/transaction-dataset-cleaned.csv
 python src/clean.py
 # or if dataset is not inside data folder
-python src/clean.py --input <path-to-the-data>
+python src/clean.py --input /path/to/dataset.csv
 
 # 2. (optional) see where the baseline floor sits
 python src/baseline_random_classifier.py
