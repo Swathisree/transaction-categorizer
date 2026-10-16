@@ -120,7 +120,7 @@ in [docs/](docs/README.md). The tournament overview is in
 
 ---
 
-## 3. How to run training
+## 3. How to run training (optional, you can run the prediction service at step 4 directly)
 
 Everything runs from Python 3.11+. Install the training dependencies:
 
