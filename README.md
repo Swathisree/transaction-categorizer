@@ -252,3 +252,11 @@ curl -X POST http://127.0.0.1:8000/predict \
 For batch prediction, POST a JSON array of the same objects to
 `/predict/batch`; the response is a parallel array of the same prediction
 objects.
+
+## 4. What could be improved
+
+- There could be a way to aggregate the merchant_name, so different names belonging to same merchant can be
+  better encoded
+- To be able to have uniform distribution for all the classes, different sampling strategies can be tried
+- The decision to only predict minor category and map them to major category may not be ideal. It would be interesting to
+  predict major category and then fine-tune minor category on it. Maybe use hierarchical model
