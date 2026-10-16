@@ -1,0 +1,71 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: api/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Start API in background
+        run: |
+          nohup python -m uvicorn api:app --host 127.0.0.1 --port 8000 > server.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8000/health >/dev/null; then
+              echo "API is up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "API did not start"; cat server.log; exit 1
+
+      - name: Smoke-test /predict
+        run: |
+          curl -sf -X POST http://127.0.0.1:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{"amount_value":-22.18,"fees":0.0,"created_at":"2026-04-28T11:45:21Z","card_name":"Carte sans contact basique","digitalization_type":"apple_pay","merchant_pan_entry_method":"CHIP_CONTACTLESS","status":"completed","pfm_recurring_frequency":null,"merchant_name":"MAC DONALD S"}' \
+            | tee response.json
+          grep -q '"predicted_minor_category":"restaurants"' response.json
+
+      - name: Smoke-test /predict/batch
+        run: |
+          curl -sf -X POST http://127.0.0.1:8000/predict/batch \
+            -H "Content-Type: application/json" \
+            -d '{"transactions":[{"amount_value":-45.30,"fees":0.0,"created_at":"2026-04-28T11:45:21Z","card_name":"Carte Lydia bleue","digitalization_type":"apple_pay","merchant_pan_entry_method":"CHIP_CONTACTLESS","status":"completed","pfm_recurring_frequency":null,"merchant_name":"CARREFOURMARKET"}]}' \
+            | grep -q 'supermarkets'
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t transaction-categorizer-api:ci api
+      - name: Run container and hit /health
+        run: |
+          docker run -d --rm -p 8000:8000 --name api transaction-categorizer-api:ci
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8000/health >/dev/null; then break; fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:8000/health | tee out.json
+          grep -q '"status":"ok"' out.json
+          docker stop api

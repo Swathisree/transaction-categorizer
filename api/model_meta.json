@@ -1,0 +1,54 @@
+{
+  "model_name": "Random Forest (tournament champion)",
+  "minor_to_major": {
+    "restaurants": "restaurants_bars_cafes",
+    "supermarkets": "groceries",
+    "tolls_gas_stations": "transportation",
+    "betting": "entertainment",
+    "transport_means": "transportation",
+    "travel_means": "travel",
+    "pharmacies": "self_care",
+    "multimedia": "entertainment",
+    "hairdresser": "self_care",
+    "atm": "finance",
+    "others_shopping": "shopping",
+    "refund": "refund"
+  },
+  "minor_classes": [
+    "atm",
+    "betting",
+    "hairdresser",
+    "multimedia",
+    "others_shopping",
+    "pharmacies",
+    "refund",
+    "restaurants",
+    "supermarkets",
+    "tolls_gas_stations",
+    "transport_means",
+    "travel_means"
+  ],
+  "major_classes": [
+    "entertainment",
+    "finance",
+    "groceries",
+    "refund",
+    "restaurants_bars_cafes",
+    "self_care",
+    "shopping",
+    "transportation",
+    "travel"
+  ],
+  "feature_cols_raw_input": [
+    "amount_value",
+    "fees",
+    "created_at",
+    "card_name",
+    "digitalization_type",
+    "merchant_pan_entry_method",
+    "status",
+    "pfm_recurring_frequency",
+    "merchant_name"
+  ],
+  "notes": "created_at is parsed to hour and day-of-week internally; pfm_recurring_frequency null is coerced to the string 'none'; fees are in euros."
+}

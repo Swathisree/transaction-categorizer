@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Private transaction data — do not commit
+src/transaction-dataset.csv
+src/transaction-dataset-cleaned.csv
+transaction-dataset.csv
+transaction-dataset-cleaned.csv
+
+# Local distribution artifacts
+api/transaction-categorizer-api.bundle
+api/transaction-categorizer-api.tar.gz
+*.tar.gz
+*.bundle
+
+# Local backups / scratch
+*.bak

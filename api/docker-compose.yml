@@ -1,0 +1,8 @@
+services:
+  api:
+    build: .
+    image: transaction-categorizer-api:latest
+    container_name: transaction-categorizer-api
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
